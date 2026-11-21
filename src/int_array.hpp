@@ -53,7 +53,7 @@ public:
 	}
 
     // TODO Step 4: destructor
-	~Arrat() {
+	~Array() {
 		delete [] buf;
 	}
 

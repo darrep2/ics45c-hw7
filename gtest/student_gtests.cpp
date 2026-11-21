@@ -25,7 +25,7 @@ TEST(IntArrayTests, SizedArrayReportsItsLength) {
 // ADD YOUR TESTS HERE:
 
 TEST(StudentIntArray, FillAllElement) {
-	const Array a{10};
+	Array a{10};
 	a.fill(7);
 	for (int i = 0; i < a.length(); ++i) {
 		EXPECT_EQ(a[i], 7);
@@ -38,13 +38,13 @@ TEST(StudentIntArray, FillAllElement) {
 }
 
 TEST(StudentIntArray, FillEmptyElement) {
-	const Array a;
+	Array a;
 	a.fill(5);
 	EXPECT_EQ(a.length(), 0);
 }
 
 TEST(StudentIntArray, SubscriptAtEnd) {
-	const Array a{5};
+	Array a{5};
 	a.fill(0);
 	a[0] = 6;
 	a[3] = 7;
@@ -54,18 +54,18 @@ TEST(StudentIntArray, SubscriptAtEnd) {
 }
 
 TEST(StudentIntArray, SubscriptOutOfRange) {
-	const Array a{5};
+	Array a{5};
 	a.fill(1);
-	expect_out_of_range(a, -1);
-	expect_out_of_range(a, 5);
+	EXPECT_THROW(a[1], std::string);
+	EXPECT_THROW(a[-1], std::string);
 	a[4] = 3;
 	EXPECT_EQ(a[4], 3);
 }
 
-EST(StudentIntArray, ConstSubscript) {
-	const Array a{3};
+TEST(StudentIntArray, ConstSubscript) {
+	Array a{3};
 	a.fill(2);
-	const Array& c = a;
+	Array& c = a;
 	EXPECT_EQ(c[0], 2);
 	EXPECT_EQ(c[2], 2);
 	EXPECT_ANY_THROW(c[3]);
@@ -76,42 +76,46 @@ TEST(StudentIntArray, EmptyArray) {
 	Array a;
 	a.fill(5);
 	EXPECT_EQ(a.length(), 0);
-	expect_out_of_range(a, 0);
+	EXPECT_THROW(a[0], std::string);
 }
 
 TEST(StudentIntArray, OnlyOneElement) {
-	const Array a{1};
+	Array a{1};
 	a.fill(8);
 	EXPECT_EQ(a.length(), 1);
 	EXPECT_EQ(a[0], 8);
-	expect_out_of_range(a, 1);
-	expect_out_of_range(a, -1);
+	EXPECT_THROW(a[1], std::string);
+	EXPECT_THROW(a[-1], std::string);
 }
 
 TEST(StudentIntArray, CopyConstructorIsDeep) {
-	const Array a{4};
-	for (int i = 0; i < 4; ++i) a[i] = i + 1;
-	const Array b{a};
+	Array a{4};
+	for (int i = 0; i < 4; ++i)
+		a[i] = i + 1;
+	Array b{a};
 	EXPECT_EQ(b.length(), 4);
-	for (int i = 0; i < 4; ++i) EXPECT_EQ(b[i], i + 1);
+	for (int i = 0; i < 4; ++i) 
+		EXPECT_EQ(b[i], i + 1);
 	b.fill(50);
-	for (int i = 0; i < 4; ++i) EXPECT_EQ(a[i], i + 1);
+	for (int i = 0; i < 4; ++i) 
+		EXPECT_EQ(a[i], i + 1);
 }
 
 TEST(StudentIntArray, CopyAssignmentIsDeep) {
-	const Array a{3};
+	Array a{3};
 	a.fill(2);
 	Array b{5};
 	b.fill(9);
 	b = a;
 	EXPECT_EQ(b.length(), 3);
-	for (int i = 0; i < 3; ++i) EXPECT_EQ(b[i], 2);
+	for (int i = 0; i < 3; ++i) 
+		EXPECT_EQ(b[i], 2);
 	b[1] = 77;
 	EXPECT_EQ(a[1], 2);
 }
 
 TEST(StudentIntArray, MoveConstructorWorks) {
-	const Array a{3};
+	Array a{3};
 	a[0] = 5;
 	a[1] = 6;
 	a[2] = 7;
@@ -122,10 +126,10 @@ TEST(StudentIntArray, MoveConstructorWorks) {
 }
 
 TEST(StudentIntArray, MoveAssignmentWorks) {
-	const Array a{2};
+	Array a{2};
 	a[0] = 1;
 	a[1] = 2;
-	const Array b{4};
+	Array b{4};
 	b.fill(0);
 	b = std::move(a);
 	EXPECT_EQ(b.length(), 2);
@@ -134,9 +138,9 @@ TEST(StudentIntArray, MoveAssignmentWorks) {
 }
 
 TEST(StudentIntArray, SwapLengthsAndContents) {
-	const Array a{2};
+	Array a{2};
 	a.fill(1);
-	const Array b{3};
+	Array b{3};
 	b.fill(2);
 	using std::swap;
 	swap(a, b);
