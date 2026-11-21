@@ -15,11 +15,47 @@ public:
     }
 
     // TODO Step 4: copy constructor
+	Array(const Array& other)
+		: len{other.len}, buf{other.buf ? new int[other.len] : nullptr} {
+		for (int i = 0; i < len; ++i)
+        	buf[i] = other.buf[i];
+    }
+
     // TODO Step 4: move constructor
+	Array(Array&& other) noexcept : len{other.len}, buf{other.buf} {
+		other.len = 0;
+		other.buf = nullptr;
+	}
+
     // TODO Step 5: friend void swap(Array& lhs, Array& rhs) noexcept
+	friend void swap(Array& lhs, Array& rhs) noexcept {
+    	std::swap(lhs.len, rhs.len);
+    	std::swap(lhs.buf, rhs.buf);
+	}
+
     // TODO Step 5: copy assignment
+	Array& operator=(const Array& other) {
+    	Array tmp{other};
+    	swap(*this, tmp);
+    	return *this;
+	}
+
     // TODO Step 5: move assignment
+	Array& operator=(Array&& other) noexcept {
+		if (this != &other) {
+    		delete[] buf;
+			len = other.len;
+			buf = other.buf;
+			other.len = 0;
+			other.buf = nullptr;
+		}
+		return *this;
+	}
+
     // TODO Step 4: destructor
+	~Arrat() {
+		delete [] buf;
+	}
 
     int length() const {
         return len;
@@ -28,15 +64,23 @@ public:
     int& operator[](int index) {
         // TODO Step 3: throw std::string when the index is out of bounds:
         //     "Exception operator[](" + std::to_string(index) + ") Out Of Range"
+		if(!in_bounds(index))
+			throw "Exception operator[](" + std::to_string(index) + ") Out of Range";
         return buf[index];
     }
 
     const int& operator[](int index) const {
         // TODO Step 3: the same check as above
+		if (!in_bounds(index)) 
+        	throw "Exception operator[](" + std::to_string(index) + ") Out of Range";
         return buf[index];
     }
 
     // TODO Step 2: void fill(int val) - set every element to val
+	void fill(int val) {
+		for(int i = 0; i < len; i++)
+			buf[i] = val;
+	}
 
 private:
     int len;
